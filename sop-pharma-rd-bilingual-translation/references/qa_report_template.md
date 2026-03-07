@@ -11,6 +11,7 @@
 - Overall status: Pass / Needs Review
 - Sections checked:
 - Key risks:
+- Skip statistics: titles / paragraphs / cells
 
 ## Checklist Results
 
@@ -47,6 +48,12 @@
 - [ ] English font Times New Roman
 - [ ] English size 10.5 pt
 - [ ] English color black
+
+### H. Idempotency (No Duplicate Translation)
+- [ ] Already bilingual titles skipped
+- [ ] Already bilingual paragraph pairs skipped
+- [ ] Already bilingual table cells skipped
+- [ ] No duplicate EN/ZH layer introduced
 
 ## Open Items For User Decision
 

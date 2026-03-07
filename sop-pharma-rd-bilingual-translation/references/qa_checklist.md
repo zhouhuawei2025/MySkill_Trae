@@ -41,8 +41,16 @@
 - [ ] English size is 10.5 pt.
 - [ ] English color is black.
 
+## H. Idempotency (No Duplicate Translation)
+
+- [ ] Already bilingual titles were detected and skipped.
+- [ ] Already bilingual paragraph pairs were detected and skipped.
+- [ ] Already bilingual table cells were detected and skipped.
+- [ ] No duplicated EN/ZH layer was introduced.
+
 ## Delivery
 
 - [ ] QA summary has been shown directly in the chat reply.
 - [ ] Full QA report file has been generated from `references/qa_report_template.md`.
 - [ ] Absolute QA report path has been provided to user for direct open/click.
+- [ ] Skip statistics were shown in the QA summary.
