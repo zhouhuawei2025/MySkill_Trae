@@ -1,0 +1,6 @@
+# Local skill source directory candidates (one path per line)
+# The script picks the first path that exists on current machine.
+
+/Users/pa/.trae-cn/skills
+# /Users/<another-user>/.trae-cn/skills
+# /home/<linux-user>/.trae-cn/skills

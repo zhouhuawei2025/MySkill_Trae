@@ -1,0 +1,4 @@
+interface:
+  display_name: "Sync Trae Skills to GitHub"
+  short_description: "Mirror Trae skills with timestamped version tags."
+  default_prompt: "Use $sync-trae-skills-github to sync /Users/pa/.trae-cn/skills into my GitHub repo with a new timestamp version."
