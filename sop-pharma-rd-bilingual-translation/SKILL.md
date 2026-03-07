@@ -85,16 +85,26 @@ Constraints:
 2. Prefer Python automation with `python-docx`.
 3. English text style: Times New Roman, 10.5 pt (Chinese 五号), black.
 4. Do not downgrade existing Chinese formatting unless needed to satisfy bilingual layout rules.
+5. Reuse `docx` skill for generic Word operations; use SOP-specific snippets from [references/python_snippets.md](references/python_snippets.md) only for this workflow's special formatting rules.
 
 ## Output Requirements
 
 At completion, provide:
 1. Output file path (`*翻译版.docx`).
 2. Confirmed section/subsection count processed.
-3. QA result summary using [references/qa_checklist.md](references/qa_checklist.md).
-4. Any unresolved ambiguities requiring user decision.
+3. QA result summary in the chat message using [references/qa_checklist.md](references/qa_checklist.md).
+4. Full QA report file path as a clickable path (for example: `/abs/path/qa_report.md`).
+5. Any unresolved ambiguities requiring user decision.
+
+## QA Delivery Rules
+
+1. Do not assume user will open files proactively.
+2. Always show a short QA summary directly in the reply message.
+3. Always generate a standalone QA report file and provide its absolute path.
+4. Use [references/qa_report_template.md](references/qa_report_template.md) as report structure.
 
 ## Resources
 
 - Execution template: [references/workflow_template.md](references/workflow_template.md)
 - QA checklist: [references/qa_checklist.md](references/qa_checklist.md)
+- Python snippets for SOP-specific formatting: [references/python_snippets.md](references/python_snippets.md)

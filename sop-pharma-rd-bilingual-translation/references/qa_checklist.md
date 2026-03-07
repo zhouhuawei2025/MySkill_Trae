@@ -40,3 +40,9 @@
 - [ ] English font is Times New Roman.
 - [ ] English size is 10.5 pt.
 - [ ] English color is black.
+
+## Delivery
+
+- [ ] QA summary has been shown directly in the chat reply.
+- [ ] Full QA report file has been generated from `references/qa_report_template.md`.
+- [ ] Absolute QA report path has been provided to user for direct open/click.

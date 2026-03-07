@@ -56,9 +56,17 @@
 - 操作系统：Windows
 - 优先工具：Python + `python-docx`
 - 英文样式：Times New Roman、10.5 pt（五号）、黑色
+- 与通用 Word 操作相关的部分优先复用 `docx` skill；本 skill 只补充 SOP 特有规则示例代码。
 
 ## 参考文件
 
 - `SKILL.md`：AI执行规范（触发、流程、规则）
 - `references/workflow_template.md`：分步骤执行模板
 - `references/qa_checklist.md`：最终质检清单
+- `references/qa_report_template.md`：给用户查看的 QA 报告模板
+- `references/python_snippets.md`：SOP 特有 Python 最小示例
+
+## QA交付方式（对用户可见）
+
+- 在回复消息中直接给出 QA 摘要（避免用户看不到结果）。
+- 同时生成完整 QA 报告文件，并提供绝对路径供用户直接打开。
