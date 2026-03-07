@@ -1,0 +1,4 @@
+interface:
+  display_name: "Pharma SOP Bilingual Translation"
+  short_description: "Translate finalized Chinese SOPs into bilingual docs."
+  default_prompt: "Use $sop-pharma-rd-bilingual-translation to convert a finalized Chinese Word SOP into a high-quality Chinese-English bilingual SOP with step-by-step QA checks."
