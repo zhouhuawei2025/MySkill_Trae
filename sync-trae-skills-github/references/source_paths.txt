@@ -2,5 +2,6 @@
 # The script picks the first path that exists on current machine.
 
 /Users/pa/.trae-cn/skills
+/Users/YJ230024-ZHW/.trae-cn/skills
 # /Users/<another-user>/.trae-cn/skills
 # /home/<linux-user>/.trae-cn/skills
