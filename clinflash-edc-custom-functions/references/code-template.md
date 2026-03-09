@@ -1,166 +1,258 @@
-# Clinflash EDC Custom Function 代码模板
+# Clinflash EDC Code Template（仅推荐模板）
 
-## 前置条件分析
-详细的前置条件分析请参考 SKILL.md 文件中的"前置条件分析"部分。
+> 本文档只提供可复用模板，不展开 API 解释。  
+> API 说明请看 [edc-api-reference.md](./edc-api-reference.md)，端到端案例请看 [edc-example-usage.md](./edc-example-usage.md)。
 
-## 文档模板
-# 需求说明
+## 快速导航
 
-## 需求名称
-- **[需求ID]** - [需求名称]
+- 最小骨架：`Template 0`
+- 质疑模式前置段：`Template 0.1`
+- 单点查询：`Template 1`
+- 多点查询 + 集合取单点：`Template 2`
+- 可添加表单/可添加行 Map 分层：`Template 3`
+- Set 去重：`Template 4`
+- OpenQuery/SetDataPointValue/RenameBlock：`Template 5`
 
-## 功能描述
-- 当[触发数据点]发生变化时，自动触发此Custom Function进行[操作]
-- [详细功能描述]
+## Template 0：最小可运行骨架
 
-## 数据点说明
-- **[数据点1]**：位于[访视]的[表单]上，[是否为可添加行]的数据点，存储[数据点含义]
-- **[数据点2]**：位于[访视]的[表单]上，[是否为可添加行]的数据点，存储[数据点含义]
-- **[数据点3]**：位于[访视]的[表单]上，[是否为可添加行]的数据点，存储[数据点含义]
-
-**数据点关系**：[描述数据点之间的关系，如同一访视、同一表单、层级关系等]
-
-## 触发条件
-当[触发数据点]发生变化时，自动触发此Custom Function进行[操作]
-
-## 检查逻辑
-1. [步骤1]
-2. [步骤2]
-3. [步骤3]
-4. [步骤4]
-5. 检查逻辑：
-   - 若[条件1]，则[操作1]
-   - 若[条件2]，则[操作2]
-
-## 代码实现：
 ```java
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.baomidou.mybatisplus.toolkit.StringUtils;
 import com.jxedc.clinflash.customfunction.CFunction;
-import com.jxedc.clinflash.customfunction.entity.CDataPoint;
 
-import java.util.List;
-
-public class [ClassName] extends CFunction {
-    private static final String CHECK_OID = "[需求ID]";
-    private static final String QUERY_MSG = "<font color=\"red\">[质疑消息]</font>";
-
+public class XxxFunction extends CFunction {
     @Override
     public int run() {
-        // 获取触发数据点
-        CDataPoint checkDp = system().getDataPoint(context().getCheckDataPoints().get(0));
-        Long subjectId = checkDp.getSubjectId();
-        
-        // 精确定位当前页面，使用dataPageId
-        // Long dataPageId = checkDp.getDataPageId();
-        
-        // 精确定位当前访视，使用instanceId
-        // Long instanceId = checkDp.getInstanceId();
-        
-        // 查询相关数据点
-        List<CDataPoint> [dataPoint1]List = system().listDataPoints(new EntityWrapper<CDataPoint>()
-                .eq("subjectId", subjectId)
-                // 根据需要添加其他条件
-                .and().eq("[条件字段]", "[条件值]")
-                .and().eq("fieldOid", "[数据点1]")
-                , null);
-        
-        // 检查数据点是否存在
-        if ([dataPoint1]List.isEmpty()) return 0;
+        return 0;
+    }
+}
+```
 
-        //查询数据点的最佳实践：
-        // 1. 查询单个数据点
-        List<CDataPoint> dpList = system().listVisibleDataPoints(new EntityWrapper<CDataPoint>()
-                .eq("subjectId", subjectId)
-                .and().eq("formOid", "FORM_OID")
-                .and().eq("fieldOid", "FIELD_OID")
-                .and().eq("isVisible", 1)
-                .and().eq("datapointActive", 1), null);
-        
-        // 处理数据点
-        if(dpList.isEmpty()) return 0;
-        CDataPoint targetDp = dpList.get(0);
-      
-        // 2. 查询特定表单的多个数据点
-        List<CDataPoint> dataPoints = system().listDataPoints(new EntityWrapper<CDataPoint>()
+## 标准思路框架（Step0-Step4）
+
+> 该框架是 Custom Function 的推荐主线。涉及质疑时，优先使用 Step0 前置段并放在 `run()` 开头。
+
+```java
+import xxxxxxx;
+import xxxxxxx;
+....
+import xxxxxxx;
+
+// ThisCustomFunctionName 的名称由用户提供
+public class ThisCustomFunctionName extends CFunction {
+    @Override
+    public int run() {
+        // step0: 若与质疑相关，优先在方法最前放置下面两行，
+        // 配合 system().openQuery(msg, xxx.getDataPointId(), checkId);
+        // 和 system().closeQuery(xxx.getDataPointId(), checkId); 使用
+        // String msg = "<font color=\"RED\">query text</font>";
+        // String checkId = "ThisCustomFunctionName";
+
+        // step1: 从 EDC 获取输入数据点参数
+        // 常用方法见: edc-api-reference.md（System API 速查、查询定位建议）
+        // 推荐模板见: Template 1 / Template 2 / Template 3
+
+        // step2: 数据处理、计算或判断，以及其他复杂操作
+        // 场景案例见: edc-example-usage.md（场景 A/B/C）
+
+        // step3: 根据判断结果，执行 EDC 操作
+        // 常用操作见: Template 5（open/close query、set value、rename block）
+
+        return 0;
+    }
+
+    // step4 (可选): 自定义函数（可有出参，也可无出参）
+    public void customFunction() {
+        // 自定义函数实现
+    }
+}
+```
+
+## Template 0.1：质疑模式前置段（放在 `run()` 最前）
+
+> 当需求涉及 `openQuery` / `closeQuery` 时，优先在 `run()` 开头放置以下三行（紧跟触发点读取前后均可，但应位于业务逻辑前）。
+
+```java
+// 如需质疑，使用以下两行，配合 openQuery/closeQuery
+String msg = "<font color=\"RED\">query text</font>";
+String checkId = "ThisCustomFunctionName";
+```
+
+推荐位置示例：
+
+```java
+@Override
+public int run() {
+    // 质疑模式前置段（建议放在方法最前）
+    String msg = "<font color=\"RED\">query text</font>";
+    String checkId = "ThisCustomFunctionName";
+
+    CDataPoint checkDp = system().getDataPoint(context().getCheckDataPoints().get(0));
+    Long subjectId = checkDp.getSubjectId();
+
+    // ...后续查询与判断
+    return 0;
+}
+```
+
+## Template 0.2：固定定位前置段（推荐默认写法）
+
+> 除非用户明确要求“脱离触发点单独批处理”，否则建议在所有查询前先写这段。  
+> 目的：以触发数据点为入口，锁定当前受试者与页面/访视上下文，避免跨受试者或跨页面误查。
+
+```java
+// 获取触发数据点（固定入口）
+CDataPoint checkDp = system().getDataPoint(context().getCheckDataPoints().get(0));
+Long subjectId = checkDp.getSubjectId();
+
+// 按需启用以下定位信息
+Long dataPageId = checkDp.getDataPageId();
+Long instanceId = checkDp.getInstanceId();
+```
+
+推荐后续查询方式：
+
+```java
+List<CDataPoint> dps = system().listDataPoints(new EntityWrapper<CDataPoint>()
+        .eq("subjectId", subjectId)
+        .and().eq("dataPageId", dataPageId)
+        .and().eq("fieldOid", "FIELD_OID"), null);
+```
+
+禁止写法（未在 reference API 中定义）：
+
+```java
+// List<CDataPoint> visdatList = system().listDataPoints("ET", "SV", "VISDAT");
+```
+
+## 查询规范（强约束）
+
+### 1) 唯一合法查询骨架（优先直接复用）
+
+```java
+CDataPoint checkDp = system().getDataPoint(context().getCheckDataPoints().get(0));
+Long subjectId = checkDp.getSubjectId();
+Long dataPageId = checkDp.getDataPageId();   // 按需使用
+Long instanceId = checkDp.getInstanceId();   // 按需使用
+
+List<CDataPoint> dps = system().listDataPoints(new EntityWrapper<CDataPoint>()
+        .eq("subjectId", subjectId)
+        // .and().eq("dataPageId", dataPageId)   // 同页面
+        // .and().eq("instanceId", instanceId)   // 同访视实例
+        .and().eq("formOid", "FORM_OID")
+        .and().eq("fieldOid", "FIELD_OID")
+        .and().eq("isVisible", 1)
+        .and().eq("dataPointActive", 1), null);
+```
+
+### 2) 禁止模式清单（不要生成）
+
+- `new EntityWrapper("ET", "SV", null)` 及同类位置参数构造器写法
+- `system().listDataPoints("ET", "SV", "VISDAT")` 及同类三参数快捷写法
+- 未经 `subjectId` 约束直接查跨表单数据点（除非用户明确要求全库批处理）
+
+### 3) 类型约束
+
+- `subjectId` 必须是 `Long`，不要写成 `String`
+- `dataPageId` 必须是 `Long`
+- `instanceId` 必须是 `Long`
+
+## Template 1：查询单个数据点（推荐）
+
+```java
+List<CDataPoint> dpList = system().listVisibleDataPoints(new EntityWrapper<CDataPoint>()
+        .eq("subjectId", subjectId)
+        .and().eq("formOid", "FORM_OID")
+        .and().eq("fieldOid", "FIELD_OID")
+        .and().eq("isVisible", 1)
+        .and().eq("dataPointActive", 1), null);
+
+if (dpList.isEmpty()) return 0;
+CDataPoint targetDp = dpList.get(0);
+```
+
+适用：查询条件已定位到单一目标点。
+
+## Template 2：多点查询 + 从集合中取单点（优先推荐）
+
+```java
+List<CDataPoint> dataPoints = system().listDataPoints(new EntityWrapper<CDataPoint>()
         .eq("subjectId", subjectId)
         .and().eq("dataPageId", dataPageId)
         .and().eq("formOid", "EASI")
         .and().in("fieldOid", Arrays.asList("QSSCORE6", "QSORRES"))
         .and().eq("dataPointActive", 1), null);
 
-        // 从集合中获取单个数据点
-        // a. 如果表单为普通表单（只包含masterRecord，不包含可添加行）
-        // QSORRES为masterRecord上的单个数据点
-        CDataPoint qsorredDp = dataPoints.stream()
-                .filter(dataPoint -> "QSORRES".equals(dataPoint.getFieldOid()))
-                .findAny().get();
-        if(StringUtils.isEmpty(qsorredDp.getDataValue())) return 0;
+// 普通表单（masterRecord）
+CDataPoint qsorresDp = dataPoints.stream()
+        .filter(dataPoint -> "QSORRES".equals(dataPoint.getFieldOid()))
+        .findAny().get();
 
-        // b. 如果表单为复合表单（包含masterRecord和可添加行）
-        // QSORRES为masterRecord上的单个数据点
-        CDataPoint qsorredDp2 = dataPoints.stream()
-                .filter(dataPoint -> "QSORRES".equals(dataPoint.getFieldOid()) && dataPoint.getGridRow() == 1)
-                .findAny().get();
-        if(StringUtils.isEmpty(qsorredDp2.getDataValue())) return 0;
-
-        // QSSCORE6为可添加行上的数据点
-        for(CDataPoint qsscore6Dp : dataPoints.stream()
-                .filter(dataPoint -> "QSSCORE6".equals(dataPoint.getFieldOid()))
-                .collect(Collectors.toList())) {
-            // 处理可添加行上的数据点...
-        }
-
-        // c. 获取QSSCORE6在第三行上的数据点（一般用于固定行）
-        CDataPoint qsscore6DpThird = dataPoints.stream()
-                .filter(dataPoint -> "QSSCORE6".equals(dataPoint.getFieldOid()) && dataPoint.getGridRow() == 3)
-                .findAny().get();
-        if(StringUtils.isEmpty(qsscore6DpThird.getDataValue())) return 0;
-        
-        
-        // 业务逻辑处理
-        // ...
-        
-        // 执行EDC操作
-        // system().openQuery(QUERY_MSG, [targetDataPointId], ClassName);
-        // system().closeQuery([targetDataPointId], ClassName);
-        
-        return 0;
-    }
-}
+// 可添加行（固定行）
+CDataPoint qsorresRow3Dp = dataPoints.stream()
+        .filter(dataPoint -> "QSORRES".equals(dataPoint.getFieldOid()) && dataPoint.getGridRow() == 3)
+        .findAny().get();
 ```
 
-## 代码优化建议
+适用：同一批结果内按 `fieldOid` 或 `fieldOid + gridRow` 定位。
 
-### 1. 数据点查询优化
-- **使用合适的查询条件**：根据数据点类型选择使用dataPageId（主记录）或instanceId（可添加表单/行）
-- **添加必要的过滤条件**：如isVisible、datapointActive等，确保只查询有效数据点
-- **使用listVisibleDataPoints**：对于需要考虑可见性的数据点，使用此方法
+## Template 3：可添加表单/可添加行 Map 分层（推荐例外）
 
-### 2. 错误处理
-- **添加空值检查**：对数据点值进行空值检查，避免空指针异常
-- **添加异常捕获**：捕获可能的异常，确保代码稳定运行
-- **添加日志记录**：在关键步骤添加日志，便于调试和问题排查
+```java
+Map<Integer, Map<Integer, Map<String, CDataPoint>>> dataPointMap = system().listDataPoints(
+        new EntityWrapper<CDataPoint>()
+                .eq("subjectId", subjectId)
+                .and().eq("folderOid", "AE")
+                .and().eq("formOid", "AE")
+                .and().in("fieldOid", Arrays.asList("AESTDAT", "AEENDAT", "AEACN"))
+                .and().eq("isVisible", 1)
+                .and().eq("dataPointActive", 1), null)
+        .stream().collect(Collectors.groupingBy(CDataPoint::getBlockRepeatNumber,
+                Collectors.groupingBy(CDataPoint::getGridRow,
+                        Collectors.toMap(CDataPoint::getFieldOid, o -> o, (o1, o2) -> o1))));
+```
 
-### 3. 性能优化
-- **减少API调用**：尽量使用一次查询获取多个数据点
-- **使用Stream API**：对于数据处理，使用Stream API提高代码可读性和效率
-- **缓存重复计算**：对于重复计算的结果，使用变量缓存
+适用：可添加页/可添加行、层级关系明显、需要批量联动判断。
 
-### 4. 代码结构
-- **模块化**：将复杂逻辑拆分为多个方法
-- **命名规范**：使用清晰的变量和方法命名
-- **注释**：为关键代码添加注释，提高代码可维护性
+## Template 4：Set 去重（可选）
 
-### 5. 数据点关系处理
-- **层级数据处理**：对于有层级关系的数据点，使用合适的查询和处理方式
-- **批量操作**：对于多个数据点的相同操作，使用批量处理
-- **数据一致性**：确保数据点之间的一致性，避免逻辑冲突
+```java
+Set<String> valueSet = dataPoints.stream()
+        .map(CDataPoint::getDataValue)
+        .filter(StringUtils::isNotEmpty)
+        .collect(Collectors.toSet());
+```
 
-## 示例：处理可添加行数据点
+适用：重复值检查、集合对比、批量存在性判断。
 
-详细的处理可添加行数据点示例请参考 SKILL.md 文件中的"高级功能"部分和 `references/edc-example-usage.md` 文件中的相关实现。
+## Template 5：常见动作模板
 
-## 示例：处理日期时间数据
+### OpenQuery
 
-详细的日期时间处理示例请参考 SKILL.md 文件中的"高级功能"部分和 `references/edc-example-usage.md` 文件中的相关实现。
+```java
+system().openQuery(msg, targetDp.getDataPointId(), checkId);
+```
+
+### CloseQuery
+
+```java
+system().closeQuery(targetDp.getDataPointId(), checkId);
+```
+
+### SetDataPointValue
+
+```java
+system().setDataPointValue(targetDp.getDataPointId(), "123");
+```
+
+### RenameBlock
+
+```java
+system().updateBlock(blockId, "NEW_BLOCK_NAME");
+```
+
+## 推荐输出清单（供生成代码前自检）
+
+- 是否优先复用上述模板，而不是从零自创
+- 若涉及质疑，`msg/checkId` 是否作为前置段放在 `run()` 开头
+- 集合取单点是否优先使用 `fieldOid` / `fieldOid + gridRow`
+- 如采用 Map/Set 方案，是否说明“因可添加行/层级处理需要”
+- 是否包含必要空值检查与有效性条件

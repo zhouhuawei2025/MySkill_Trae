@@ -20,7 +20,7 @@ clinflashEDC-custom-functions/
     ├── code-template.md  # 代码模板
     ├── edc-api-reference.md  # EDC系统API参考
     ├── edc-example-usage.md  # EDC使用示例
-    ├── OpenQuery-operarions/  # 质疑操作示例
+    ├── OpenQuery-operations/  # 质疑操作示例
     │   ├── calculation-validation/  # 计算与验证相关
     │   │   ├── BMI_CalculatorAndValidator.md  # BMI计算与验证
     │   │   ├── QTCF_CalculatorValidator.md  # QTCF计算与验证
@@ -165,7 +165,7 @@ public class ThisCustomFunctionName extends CFunction {
 - `references/code-template.md` - 代码模板
 - `references/edc-api-reference.md` - EDC系统API参考
 - `references/edc-example-usage.md` - EDC使用示例
-- `references/OpenQuery-operarions/` - 质疑操作示例
+- `references/OpenQuery-operations/` - 质疑操作示例
 - `references/RenameBlock-operations/` - 重命名Block操作示例
 - `references/SetDatapointValue-operations/` - 设置数据点值操作示例
 
@@ -316,7 +316,7 @@ system().closeQuery(rrDp.getDataPointId(), "RR_CHECK");
 
 ### 完整示例分类
 
-#### 1. 质疑操作 (OpenQuery-operarions)
+#### 1. 质疑操作 (OpenQuery-operations)
 
 ##### 1.1 计算与验证相关 (calculation-validation)
 - **BMI_CalculatorAndValidator.md** - BMI计算与验证
