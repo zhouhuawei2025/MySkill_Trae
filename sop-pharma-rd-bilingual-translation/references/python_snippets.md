@@ -31,13 +31,23 @@ def write_bold_title(paragraph, number, en_title, zh_title):
 ## 3) Non-table paragraph layout (EN paragraph first, ZH paragraph second)
 
 ```python
-def insert_bilingual_paragraph(doc, en_text: str, zh_text: str):
-    p_en = doc.add_paragraph(en_text)
-    for r in p_en.runs:
-        style_english_run(r)
+from docx.oxml import OxmlElement
+from docx.text.paragraph import Paragraph
 
-    # Keep Chinese as separate paragraph after English
-    doc.add_paragraph(zh_text)
+
+def insert_paragraph_after(paragraph, text: str) -> Paragraph:
+    new_p = OxmlElement("w:p")
+    paragraph._p.addnext(new_p)
+    para = Paragraph(new_p, paragraph._parent)
+    para.add_run(text)
+    return para
+
+
+def write_bilingual_paragraph(paragraph, en_text: str, zh_text: str):
+    clear_paragraph(paragraph)
+    run = paragraph.add_run(en_text)
+    style_english_run(run)
+    insert_paragraph_after(paragraph, zh_text)
 ```
 
 ## 4) Table header cell format (single line: EN ZH)
@@ -81,3 +91,4 @@ def build_output_path(source_path: str) -> Path:
 - Translate body content only. Do not edit header/footer.
 - Keep section and subsection order unchanged.
 - Keep one-to-one mapping of source paragraphs/cells.
+- Leading approval/signature tables are often maintained manually and may be skipped.
