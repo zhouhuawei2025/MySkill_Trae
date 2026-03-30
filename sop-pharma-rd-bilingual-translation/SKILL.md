@@ -18,9 +18,8 @@ Convert a finalized Chinese SOP Word file into a bilingual (EN+ZH) version by op
 4. Read full document and map section hierarchy from body start to end.
 5. Translate in order by section and subsection; do not skip, merge, or reorder.
 6. Apply bilingual formatting rules for titles, paragraphs, and tables.
-7. Before writing each title/paragraph/cell, run idempotency checks and skip already bilingual content.
-8. Run QA checklist in [references/qa_checklist.md](references/qa_checklist.md).
-9. Report completion with key validation outcomes.
+7. Run QA checklist in [references/qa_checklist.md](references/qa_checklist.md).
+8. Report completion with key validation outcomes.
 
 ## Section Parsing Rules
 
@@ -80,23 +79,6 @@ Constraints:
 3. Do not merge across cells.
 4. Do not move content across rows/columns.
 
-## Idempotency Rules (Avoid Duplicate Translation)
-
-When source already contains bilingual content, do not translate that segment again.
-
-1. Title skip rule:
-- If title already matches `<number> <English> <Chinese>` pattern, keep as-is.
-
-2. Paragraph skip rule:
-- If current paragraph is English and next paragraph is matching Chinese source paragraph, treat as an existing bilingual pair and skip both.
-
-3. Table skip rules:
-- Header cell: if already in `English Chinese` one-line format, skip.
-- Non-header cell: if paragraphs are already arranged as English block first then Chinese block, skip.
-
-4. Safety rule:
-- Never append a second English layer to already bilingual content.
-
 ## Font and Platform Requirements
 
 1. Target environment: Windows.
@@ -112,8 +94,7 @@ At completion, provide:
 2. Confirmed section/subsection count processed.
 3. QA result summary in the chat message using [references/qa_checklist.md](references/qa_checklist.md).
 4. Full QA report file path as a clickable path (for example: `/abs/path/qa_report.md`).
-5. Skip statistics (titles/paragraphs/cells already bilingual and not rewritten).
-6. Any unresolved ambiguities requiring user decision.
+5. Any unresolved ambiguities requiring user decision.
 
 ## QA Delivery Rules
 
@@ -122,8 +103,13 @@ At completion, provide:
 3. Always generate a standalone QA report file and provide its absolute path.
 4. Use [references/qa_report_template.md](references/qa_report_template.md) as report structure.
 
+## Example Script
+
+When you need a compact runnable example, use [scripts/minimal_example.py](scripts/minimal_example.py). It demonstrates three representative patterns only: bilingual titles, bilingual body paragraphs, and multi-line table cells with English paragraphs first and Chinese paragraphs second. It intentionally skips the leading approval table because that section is typically edited manually.
+
 ## Resources
 
 - Execution template: [references/workflow_template.md](references/workflow_template.md)
 - QA checklist: [references/qa_checklist.md](references/qa_checklist.md)
 - Python snippets for SOP-specific formatting: [references/python_snippets.md](references/python_snippets.md)
+- Minimal runnable example: [scripts/minimal_example.py](scripts/minimal_example.py)

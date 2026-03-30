@@ -51,13 +51,7 @@ Non-header-row cells:
 2. English size: 10.5 pt.
 3. English color: black.
 
-## Step 8: Idempotency Check
 
-1. Detect already bilingual titles and skip rewrite.
-2. Detect existing EN+ZH paragraph pairs and skip rewrite.
-3. Detect already bilingual table cells and skip rewrite.
-4. Record skip statistics.
-
-## Step 9: Final QA
+## Step 8: Final QA
 
 Run full checklist in `references/qa_checklist.md`.
